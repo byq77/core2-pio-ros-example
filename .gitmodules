@@ -1,4 +1,3 @@
-[submodule "lib/rosserial"]
+[submodule "rosserial"]
 	path = lib/rosserial
 	url = https://github.com/byq77/rosserial-mbed.git
-	branch = master
