@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    branches:
+      - 'master'
+    types: [assigned, opened, synchronize, reopened]
+
+jobs:
+  build-firmware:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build current project using platformio 
+        id: builder
+        uses: docker://sglahn/platformio-core:latest
+        with:
+          args: run
+
+      - name: Prepare firmware files
+        run: |
+          mkdir out
+          cp .pio/build/core2/firmware.bin out/firmware.bin
+
+      - name: Upload firmware files
+        uses: actions/upload-artifact@v2
+        with:
+          name: firmware_${{ github.sha }}
+          path: out/*
